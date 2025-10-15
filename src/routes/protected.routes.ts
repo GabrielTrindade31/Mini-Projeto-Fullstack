@@ -1,10 +1,10 @@
-import { Router } from 'express';
+import { Router, Response } from 'express';
 import { protectedController } from '../controllers/protected.controller';
-import { authenticateToken } from '../middlewares/auth.middleware';
+import { authenticateToken, AuthenticatedRequest } from '../middlewares/auth.middleware';
 
 const protectedRouter = Router();
 
-protectedRouter.get('/protected', authenticateToken, (req, res) =>
+protectedRouter.get('/protected', authenticateToken, (req: AuthenticatedRequest, res: Response) =>
   protectedController.getProtectedMessage(req, res)
 );
 

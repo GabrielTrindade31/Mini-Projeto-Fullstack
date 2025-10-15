@@ -77,6 +77,19 @@ O servidor sobe na porta definida em `PORT` (padrão `3333`). As rotas disponív
 - `POST /login`
 - `GET /protected` (necessita header `Authorization: Bearer <token>`)
 
+## Execução no GitHub Codespaces
+
+1. Crie o Codespace a partir deste repositório selecionando o template padrão de Node.js.
+2. Copie o arquivo `.env.example` para `.env` e informe as variáveis necessárias (recomenda-se utilizar um cluster MongoDB Atlas).
+3. No terminal do Codespace, instale as dependências e inicie o servidor:
+
+   ```bash
+   npm install
+   npm run dev
+   ```
+
+4. Utilize a aba **Ports** para expor a porta `3333` e acesse a URL pública fornecida pelo Codespace para testar os endpoints (os scripts em [`requests/`](requests/) também funcionam ajustando `BASE_URL`).
+
 ## Scripts de requisição
 
 A pasta [`requests/`](requests/) contém arquivos `.sh` com exemplos de requisições utilizando `curl`. Execute-os conforme necessário:
@@ -103,5 +116,36 @@ Os scripts aceitam variáveis de ambiente (`BASE_URL`, `EMAIL`, `PASSWORD`, `TOK
 
 - **Link da aplicação hospedada:** <!-- Adicione aqui o link após publicar -->
 - **Vídeo demonstrativo:** <!-- Adicione aqui o link do vídeo (até 2 minutos) -->
+
+## Deploy na Vercel
+
+1. Instale a CLI da Vercel (localmente ou no Codespace):
+
+   ```bash
+   npm install -g vercel
+   ```
+
+2. Autentique-se e associe o projeto:
+
+   ```bash
+   vercel login
+   vercel link
+   ```
+
+3. Configure as variáveis de ambiente no painel da Vercel (`MONGO_URI_PROD`, `JWT_SECRET`, `NODE_ENV=production`) ou via CLI:
+
+   ```bash
+   vercel env add MONGO_URI_PROD production
+   vercel env add JWT_SECRET production
+   vercel env add NODE_ENV production
+   ```
+
+4. Faça o deploy (primeiro um preview, depois produção):
+
+   ```bash
+   vercel --prod
+   ```
+
+O arquivo [`vercel.json`](vercel.json) direciona todas as requisições para o handler serverless em [`api/index.ts`](api/index.ts), que reutiliza a mesma aplicação Express do ambiente local. Após o deploy, atualize a seção [Hospedagem e vídeo](#hospedagem-e-vídeo) com a URL final e grave a demonstração solicitada.
 
 Atualize esta seção após realizar o deploy (ex.: Vercel, Render) e gravar o vídeo demostrando as funcionalidades exigidas.
