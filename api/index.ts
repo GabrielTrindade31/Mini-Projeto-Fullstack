@@ -5,6 +5,15 @@ import logger from '../src/utils/logger';
 
 let appPromise: Promise<ReturnType<typeof createApp>> | null = null;
 
+import health from '../src/routes/health.routes';
+import { Router } from 'express';
+import authRouter from '../src/routes/auth.routes';
+import protectedRouter from '../src/routes/protected.routes';
+const router = Router();
+router.use(health);
+router.use(authRouter);
+router.use(protectedRouter);
+
 const getApp = async () => {
   if (!appPromise) {
     appPromise = (async () => {
