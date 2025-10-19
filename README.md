@@ -7,10 +7,13 @@ API REST desenvolvida em Node.js com TypeScript, Express e MongoDB, implementand
 - [Tecnologias](#tecnologias)
 - [Arquitetura de pastas](#arquitetura-de-pastas)
 - [Configuração](#configuração)
+- [Configuração do MongoDB](#configuração-do-mongodb)
 - [Execução local](#execução-local)
+- [Execução no GitHub Codespaces](#execução-no-github-codespaces)
 - [Scripts de requisição](#scripts-de-requisição)
 - [Boas práticas implementadas](#boas-práticas-implementadas)
 - [Hospedagem e vídeo](#hospedagem-e-vídeo)
+- [Deploy na Vercel](#deploy-na-vercel)
 
 ## Tecnologias
 
@@ -43,33 +46,56 @@ Cada camada possui responsabilidade única e isolada, facilitando a manutenção
 
 ## Configuração
 
-1. Copie o arquivo `.env.example` para `.env` e ajuste as variáveis de ambiente:
+1. (Opcional, mas recomendado) Suba o MongoDB local com Docker Compose:
+
+   ```bash
+docker compose up -d mongo
+   ```
+
+   > Caso prefira utilizar MongoDB Atlas ou outra instância remota, consulte a seção [Configuração do MongoDB](#configuração-do-mongodb).
+
+2. Copie o arquivo `.env.example` para `.env` e ajuste as variáveis de ambiente:
 
    ```bash
    cp .env.example .env
    ```
 
-2. Configure os valores necessários:
+3. Configure os valores necessários (veja detalhes em [`docs/mongodb.md`](docs/mongodb.md)):
 
    ```env
    PORT=3333
    NODE_ENV=development
    MONGO_URI=mongodb://localhost:27017/mini_projeto_fullstack
    MONGO_URI_PROD= # URI do cluster Atlas ou equivalente
-   JWT_SECRET= # chave secreta segura
+   JWT_SECRET=dev-secret-change-me # substitua por uma chave segura em produção
    ```
 
-3. Instale as dependências:
+   Para gerar uma chave aleatória, execute `openssl rand -base64 32` ou utilize a alternativa descrita na documentação.
+
+4. Instale as dependências:
 
    ```bash
    npm install
    ```
 
+## Configuração do MongoDB
+
+O repositório inclui um guia completo em [`docs/mongodb.md`](docs/mongodb.md) com três abordagens:
+
+- **Docker Compose local** — basta executar `docker compose up -d mongo` para ter um banco pronto para uso.
+- **MongoDB Atlas (nuvem)** — passo a passo para criar cluster, usuário e copiar a string `mongodb+srv://`.
+- **GitHub Codespaces** — orientações específicas sobre portas, variáveis e execução no ambiente remoto.
+
+Escolha a opção que melhor se adequa ao seu cenário e preencha `MONGO_URI`/`MONGO_URI_PROD` conforme indicado.
+
 ## Execução local
 
-```bash
-npm run dev
-```
+1. Certifique-se de que o MongoDB esteja ativo (via `docker compose up -d mongo` ou Atlas).
+2. Inicie o servidor em modo desenvolvimento:
+
+   ```bash
+   npm run dev
+   ```
 
 O servidor sobe na porta definida em `PORT` (padrão `3333`). As rotas disponíveis são:
 
@@ -77,14 +103,17 @@ O servidor sobe na porta definida em `PORT` (padrão `3333`). As rotas disponív
 - `POST /login`
 - `GET /protected` (necessita header `Authorization: Bearer <token>`)
 
+Para encerrar os serviços locais, utilize `Ctrl+C` no terminal da API e `docker compose down` para desligar o banco.
+
 ## Execução no GitHub Codespaces
 
 1. Crie o Codespace a partir deste repositório selecionando o template padrão de Node.js.
-2. Copie o arquivo `.env.example` para `.env` e informe as variáveis necessárias (recomenda-se utilizar um cluster MongoDB Atlas).
-3. No terminal do Codespace, instale as dependências e inicie o servidor:
+2. Copie o arquivo `.env.example` para `.env` e informe as variáveis necessárias (você pode usar Docker ou uma URI do MongoDB Atlas).
+3. No terminal do Codespace, instale as dependências e inicie o banco/servidor:
 
    ```bash
    npm install
+   docker compose up -d mongo # ou configure MONGO_URI com Atlas
    npm run dev
    ```
 
