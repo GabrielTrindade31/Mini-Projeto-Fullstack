@@ -1,0 +1,181 @@
+_type: export
+__export_format: 4
+__export_date: 2025-10-19T00:00:00.000Z
+__export_source: mini-projeto-fullstack
+resources:
+  - _id: wrk_mpf
+    parentId: null
+    modified: 0
+    created: 0
+    name: Mini-Projeto-Fullstack
+    description: "Coleção de testes"
+    scope: collection
+    _type: workspace
+
+  - _id: env_mpf_base
+    parentId: wrk_mpf
+    modified: 0
+    created: 0
+    name: Base Environment
+    data:
+      base_url: https://mini-projeto-fullstack.vercel.app
+      token: ""
+    _type: environment
+
+  # -------- REGISTER --------
+  - _id: req_register_ok
+    parentId: wrk_mpf
+    name: Cadastro bem-sucedido
+    method: POST
+    url: "{{ _.base_url }}/register"
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "name": "Gabriel",
+          "email": "gabriel+ok@example.com",
+          "password": "Aa@123456"
+        }
+    _type: request
+
+  - _id: req_register_email_duplicado
+    parentId: wrk_mpf
+    name: Cadastro - e-mail repetido
+    method: POST
+    url: "{{ _.base_url }}/register"
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "name": "Gabriel",
+          "email": "gabriel+ok@example.com",
+          "password": "Aa@123456"
+        }
+    _type: request
+
+  - _id: req_register_senha_invalida
+    parentId: wrk_mpf
+    name: Cadastro - senha inválida
+    method: POST
+    url: "{{ _.base_url }}/register"
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "name": "Gabriel",
+          "email": "gabriel+weak@example.com",
+          "password": "123"
+        }
+    _type: request
+
+  - _id: req_register_email_invalido
+    parentId: wrk_mpf
+    name: Cadastro - e-mail inválido
+    method: POST
+    url: "{{ _.base_url }}/register"
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "name": "Gabriel",
+          "email": "email-invalido",
+          "password": "Aa@123456"
+        }
+    _type: request
+
+  - _id: req_register_mal_formatado
+    parentId: wrk_mpf
+    name: Cadastro - requisição mal formatada
+    method: POST
+    url: "{{ _.base_url }}/register"
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "email": "gabriel+missingname@example.com"
+        }
+    _type: request
+
+  # -------- LOGIN --------
+  - _id: req_login_ok
+    parentId: wrk_mpf
+    name: Login bem-sucedido
+    method: POST
+    url: "{{ _.base_url }}/login"
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "email": "gabriel+ok@example.com",
+          "password": "Aa@123456"
+        }
+    _type: request
+
+  - _id: req_login_senha_errada
+    parentId: wrk_mpf
+    name: Login - senha inválida
+    method: POST
+    url: "{{ _.base_url }}/login"
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "email": "gabriel+ok@example.com",
+          "password": "senhaErrada"
+        }
+    _type: request
+
+  - _id: req_login_email_invalido
+    parentId: wrk_mpf
+    name: Login - e-mail inválido
+    method: POST
+    url: "{{ _.base_url }}/login"
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "email": "email-invalido",
+          "password": "Aa@123456"
+        }
+    _type: request
+
+  - _id: req_login_mal_formatado
+    parentId: wrk_mpf
+    name: Login - requisição mal formatada
+    method: POST
+    url: "{{ _.base_url }}/login"
+    body:
+      mimeType: application/json
+      text: |
+        {
+          "email": "gabriel@example.com"
+        }
+    _type: request
+
+  # -------- PROTECTED --------
+  - _id: req_protected_com_token
+    parentId: wrk_mpf
+    name: /protected com token válido
+    method: GET
+    url: "{{ _.base_url }}/protected"
+    headers:
+      - name: Authorization
+        value: "Bearer {{ _.token }}"
+    _type: request
+
+  - _id: req_protected_sem_token
+    parentId: wrk_mpf
+    name: /protected sem token
+    method: GET
+    url: "{{ _.base_url }}/protected"
+    _type: request
+
+  - _id: req_protected_token_invalido
+    parentId: wrk_mpf
+    name: /protected com token inválido
+    method: GET
+    url: "{{ _.base_url }}/protected"
+    headers:
+      - name: Authorization
+        value: "Bearer abc.def.ghi"
+    _type: request
