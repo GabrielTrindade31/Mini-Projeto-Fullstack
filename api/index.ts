@@ -22,20 +22,12 @@ const getApp = async () => {
       return createApp();
     })();
   }
-
   return appPromise;
 };
 
-const handler = async (req: IncomingMessage, res: ServerResponse) => {
+export default async function handler(req: IncomingMessage, res: ServerResponse) {
   const app = await getApp();
-  return app(req as any, res as any);
-};
+  return (app as any)(req, res);
+}
 
-export default handler;
-
-export const config = {
-  api: {
-    bodyParser: false,
-    externalResolver: true,
-  },
-};
+export const config = { api: { bodyParser: false, externalResolver: true } };

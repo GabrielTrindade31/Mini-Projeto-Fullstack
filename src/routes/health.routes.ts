@@ -1,8 +1,6 @@
 import { Router } from 'express';
 const health = Router();
 
-health.get('/healthz', (_req, res) => {
-  res.json({ ok: true });
-});
+health.get('/', (_req, res) => res.json({ status: 'ok', service: 'mini-projeto-fullstack' }));
 
 export default health;
