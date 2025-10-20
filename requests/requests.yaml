@@ -28,6 +28,9 @@ resources:
     name: Cadastro bem-sucedido
     method: POST
     url: "{{ _.base_url }}/register"
+    headers:
+      - name: Content-Type
+        value: application/json
     body:
       mimeType: application/json
       text: |
@@ -43,6 +46,9 @@ resources:
     name: Cadastro - e-mail repetido
     method: POST
     url: "{{ _.base_url }}/register"
+    headers:
+      - name: Content-Type
+        value: application/json
     body:
       mimeType: application/json
       text: |
@@ -58,6 +64,9 @@ resources:
     name: Cadastro - senha inválida
     method: POST
     url: "{{ _.base_url }}/register"
+    headers:
+      - name: Content-Type
+        value: application/json
     body:
       mimeType: application/json
       text: |
@@ -73,6 +82,9 @@ resources:
     name: Cadastro - e-mail inválido
     method: POST
     url: "{{ _.base_url }}/register"
+    headers:
+      - name: Content-Type
+        value: application/json
     body:
       mimeType: application/json
       text: |
@@ -88,6 +100,9 @@ resources:
     name: Cadastro - requisição mal formatada
     method: POST
     url: "{{ _.base_url }}/register"
+    headers:
+      - name: Content-Type
+        value: application/json
     body:
       mimeType: application/json
       text: |
@@ -102,6 +117,9 @@ resources:
     name: Login bem-sucedido
     method: POST
     url: "{{ _.base_url }}/login"
+    headers:
+      - name: Content-Type
+        value: application/json
     body:
       mimeType: application/json
       text: |
@@ -116,6 +134,9 @@ resources:
     name: Login - senha inválida
     method: POST
     url: "{{ _.base_url }}/login"
+    headers:
+      - name: Content-Type
+        value: application/json
     body:
       mimeType: application/json
       text: |
@@ -130,6 +151,9 @@ resources:
     name: Login - e-mail inválido
     method: POST
     url: "{{ _.base_url }}/login"
+    headers:
+      - name: Content-Type
+        value: application/json
     body:
       mimeType: application/json
       text: |
@@ -144,6 +168,9 @@ resources:
     name: Login - requisição mal formatada
     method: POST
     url: "{{ _.base_url }}/login"
+    headers:
+      - name: Content-Type
+        value: application/json
     body:
       mimeType: application/json
       text: |
