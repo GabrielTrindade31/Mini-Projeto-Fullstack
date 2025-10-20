@@ -19,10 +19,19 @@ export const createApp = (): express.Application => {
   // JSON da spec (útil para debug)
   app.get('/docs.json', (_req, res) => res.json(swaggerSpec));
   // UI
-  app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
+  app.use(
+    '/docs',
+    swaggerUi.serve,
+    swaggerUi.setup(undefined, {
+      swaggerOptions: { url: '/docs.json' },
+      explorer: true,
+    })
+  );
 
   app.use(router);
   app.use(errorMiddleware);
+  
   return app;
 };
+
 export default createApp; // ok ter default também
