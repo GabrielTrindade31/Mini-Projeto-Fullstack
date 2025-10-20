@@ -10,21 +10,19 @@ import { swaggerSpec } from './config/swagger';
 export const createApp = (): express.Application => {
   const app = express();
 
-  app.use(helmet());
   app.use(cors());
+  // Desabilite CSP para o Swagger UI (evita página em branco)
+  app.use(helmet({ contentSecurityPolicy: false }));
   app.use(express.json());
   app.use(requestLogger);
 
-  // Swagger UI em /docs
-  app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+  // JSON da spec (útil para debug)
+  app.get('/docs.json', (_req, res) => res.json(swaggerSpec));
+  // UI
+  app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
 
-  // Suas rotas
   app.use(router);
-
-  // Tratador de erros
   app.use(errorMiddleware);
-
   return app;
 };
-
-export default createApp; // opcional
+export default createApp; // ok ter default também
