@@ -2,6 +2,8 @@
 
 API REST desenvolvida em Node.js com TypeScript, Express e MongoDB, implementando autenticação baseada em JWT e estrutura em camadas (middlewares, routes, controllers, services, models e database). O projeto contempla validações robustas, hash de senhas com **bcrypt**, logs estruturados e exemplos de requisições via `curl`.
 
+Na evolução desta versão foi adicionado um CRUD completo e autenticado de **tarefas** (to-do list) permitindo criar, listar, buscar por filtros, atualizar (PUT/PATCH) e remover itens associados ao usuário autenticado.
+
 ## Sumário
 
 - [Tecnologias](#tecnologias)
@@ -102,6 +104,28 @@ O servidor sobe na porta definida em `PORT` (padrão `3333`). As rotas disponív
 - `POST /register`
 - `POST /login`
 - `GET /protected` (necessita header `Authorization: Bearer <token>`)
+- `POST /tasks` (cria tarefa)
+- `GET /tasks` (lista tarefas com suporte a filtros por `status`, `title` e `dueDate`)
+- `GET /tasks/:id`
+- `PUT /tasks/:id`
+- `PATCH /tasks/:id`
+- `DELETE /tasks/:id`
+
+Todos os endpoints de tarefas exigem autenticação via JWT.
+
+### Estrutura da entidade `Task`
+
+Cada tarefa criada pertence exclusivamente ao usuário autenticado e possui os seguintes campos:
+
+| Campo       | Tipo                    | Obrigatório | Descrição |
+|-------------|-------------------------|-------------|-----------|
+| `title`     | `string`                | Sim         | Título da tarefa (mínimo 3 caracteres). |
+| `description` | `string`             | Não         | Texto livre para detalhamento (máx. 500 caracteres). |
+| `status`    | `"pending" \| "in_progress" \| "completed"` | Não (default `pending`) | Estado atual da tarefa. |
+| `dueDate`   | `string (ISO 8601)`     | Não         | Data limite. Envie `null` em PATCH/PUT para remover. |
+| `createdAt`/`updatedAt` | `Date`      | Automático  | Campos de auditoria gerenciados pelo Mongoose. |
+
+Requisições de usuários diferentes nunca acessam dados entre si — o serviço retorna **403** quando detecta tentativa de acesso a tarefas de outro usuário.
 
 Para encerrar os serviços locais, utilize `Ctrl+C` no terminal da API e `docker compose down` para desligar o banco.
 
@@ -130,6 +154,21 @@ bash requests/login_success.sh
 ```
 
 Os scripts aceitam variáveis de ambiente (`BASE_URL`, `EMAIL`, `PASSWORD`, `TOKEN`, etc.) para reutilização em ambientes locais ou hospedados.
+
+Além dos arquivos `.sh`, disponibilizamos `requests/requests.yaml` que pode ser importado diretamente no Insomnia/Postman. A coleção inclui exemplos de sucesso e erros para:
+
+- Cadastro e login;
+- Rotas protegidas sem token e com token inválido;
+- CRUD completo de tarefas (criar, listar com filtros, detalhar, atualizar por PUT/PATCH e remover);
+- Casos negativos: requisição mal formatada, token ausente/inválido e simulação de tentativa de acesso a tarefa de outro usuário.
+
+Antes de executar as requisições de tarefas configure, no Insomnia/Postman, os seguintes valores no ambiente da coleção:
+
+- `base_url`: URL local ou hospedada da API;
+- `token`: token JWT do usuário principal;
+- `token_outro_usuario`: token JWT de um usuário diferente (para simular a resposta 403);
+- `task_id`: ID de uma tarefa criada pelo usuário principal (usado em GET/PUT/PATCH/DELETE);
+- `task_id_outro_usuario`: ID de uma tarefa pertencente a outro usuário (para o cenário 403).
 
 ## Boas práticas implementadas
 
